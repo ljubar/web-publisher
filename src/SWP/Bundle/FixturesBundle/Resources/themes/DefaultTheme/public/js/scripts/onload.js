@@ -184,6 +184,11 @@ $(document).ready(function() {
         'close_popup_link': $('#login_popup .close')
     });
 
+    $('#user_profile').hsPopup({
+        'open_popup_link': $('.open_user_profile'),
+        'close_popup_link': $('#user_profile .close')
+    });    
+
 
     var frm = $('#loginform');
     frm.submit(function() {

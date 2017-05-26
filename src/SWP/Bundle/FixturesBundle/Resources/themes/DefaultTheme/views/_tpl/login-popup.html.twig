@@ -24,14 +24,14 @@
 					<div class="field_row row">
 						<label for="l_field_login" class="span2">{{ 'user.popup.username'|trans|desc('User name') }}</label>
 						<div class="span3">
-							<input type="text" name="_username" value="{{ app.session.get('_security.last_username') }}" />
+							<input type="text" id="_username" name="_username" value="{{ app.session.get('_security.last_username') }}" />
 						</div>
 					</div>
 
 					<div class="field_row row">
 						<label for="l_field_password" class="span2">{{ 'user.popup.password'|trans|desc('Password') }}</label>
 						<div class="span3">
-							<input type="password" name="_password" value="" />
+							<input id="_password" type="password" name="_password" value="" />
 						</div>
 					</div>
 
@@ -43,6 +43,22 @@
 						</div>
 					</div>
 				</form>
+
+				<script type="text/javascript">
+
+				$('#loginform').submit(function(event) {
+    				var userPref = {};
+    				$inputs.each(function() {
+        				values[this.name] = $(this).val();
+        				console.log("values[" + this.name + "] = " + $(this).val());
+    				});
+    				// Store
+					localStorage.CurrUser = userPref;
+					// Retrieve
+					event.preventDefault();
+				});
+
+				</script>
 
 				<h4>Don't have account yet? Create one here:</h4>
 				<form name="register" action="/app_dev.php/api/v1/users/register/" id="registerForm">

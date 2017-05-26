@@ -1,0 +1,49 @@
+<div class="container">
+							
+	<div id="user_profile" class="popup span6 offset3">
+		<a href="#" class="close"></a>
+		<div class="content content_text" id="childHolder">
+									
+			<h3 class="popup_title bigger">{{ 'user.profile.title'|trans|desc('Edit Profile') }}</h3>
+
+			<div class="styled_form login_form">
+
+				<h4>You can edit your profile here:</h4>
+				<form name="profile" action="/app_dev.php/api/v1/users/register/" id="editProfile">
+					<div class="field_row row">
+						<label for="l_field_login" class="span2">{{ 'user.popup.email'|trans|desc('E-mail') }}</label>
+						<div class="span3">
+							<input type="email" name="_email" value="" />
+						</div> 
+					</div>                   
+					<div class="field_row row">
+						<label for="l_field_login" class="span2">{{ 'user.popup.username'|trans|desc('User name') }}</label>
+						<div class="span3">
+							<input type="text" name="_username" value="" />
+						</div>
+					</div>
+					<div class="field_row row">
+						<label for="l_field_login" class="span2">{{ 'user.popup.password'|trans|desc('Password') }}</label>
+						<div class="span3">
+							<input type="password" name="_password" value="" />
+						</div>
+					</div>   
+					<div class="field_row row">
+						<label for="l_field_login" class="span2">{{ 'user.popup.passwordConfirm'|trans|desc('Confirm password') }}</label>
+						<div class="span3">
+							<input type="password" name="_password2" value="" />
+						</div>
+					</div>                         
+					<div class="field_row row">
+						<div class="span3 offset2"> 
+							<input type="submit" value="Sign Up" class="float_right">
+						</div>
+					</div>           
+				</form>
+
+				<div id="editProfileResult"></div>
+
+			</div>
+		</div>
+	</div>
+</div>
