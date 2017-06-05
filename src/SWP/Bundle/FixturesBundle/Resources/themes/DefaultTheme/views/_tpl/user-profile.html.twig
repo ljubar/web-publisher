@@ -9,39 +9,139 @@
 			<div class="styled_form login_form">
 
 				<h4>You can edit your profile here:</h4>
-				<form name="profile" action="/app_dev.php/api/v1/users/register/" id="editProfile">
-					<div class="field_row row">
-						<label for="l_field_login" class="span2">{{ 'user.popup.email'|trans|desc('E-mail') }}</label>
-						<div class="span3">
-							<input type="email" name="_email" value="" />
-						</div> 
-					</div>                   
+				<form name="profile" action="" id="editProfile">
+                   
 					<div class="field_row row">
 						<label for="l_field_login" class="span2">{{ 'user.popup.username'|trans|desc('User name') }}</label>
 						<div class="span3">
-							<input type="text" name="_username" value="" />
+							<input type="text" id="_usernameP" name="_username" value="" />
 						</div>
 					</div>
+
+					<div class="field_row row">
+						<label for="l_field_login" class="span2">{{ 'user.popup.email'|trans|desc('E-mail') }}</label>
+						<div class="span3">
+							<input type="email" id="_emailP" name="_email" value="" />
+						</div> 
+					</div>
+
+					<div class="field_row row">
+						<label for="l_field_login" class="span2">{{ 'user.popup.email'|trans|desc('First name') }}</label>
+						<div class="span3">
+							<input type="text" id="_fnameP" name="_fname" value="" />
+						</div> 
+					</div>					
+
+					<div class="field_row row">
+						<label for="l_field_login" class="span2">{{ 'user.popup.email'|trans|desc('Last name') }}</label>
+						<div class="span3">
+							<input type="text" id="_lnameP" name="_lname" value="" />
+						</div> 
+					</div>
+
+
+					<div class="field_row row">
+						<label for="l_field_login" class="span2">{{ 'user.popup.about'|trans|desc('About') }}</label>
+						<div class="span3">
+							<textarea id="_aboutP" name="_about" value=""></textarea>
+						</div>
+					</div>					           
+
 					<div class="field_row row">
 						<label for="l_field_login" class="span2">{{ 'user.popup.password'|trans|desc('Password') }}</label>
 						<div class="span3">
-							<input type="password" name="_password" value="" />
+							<input type="password" id="_passwordP" name="_password" value="" />
 						</div>
 					</div>   
+
 					<div class="field_row row">
 						<label for="l_field_login" class="span2">{{ 'user.popup.passwordConfirm'|trans|desc('Confirm password') }}</label>
 						<div class="span3">
-							<input type="password" name="_password2" value="" />
+							<input type="password" id="_password2P" name="_password2" value="" />
 						</div>
-					</div>                         
+					</div>
+
 					<div class="field_row row">
 						<div class="span3 offset2"> 
-							<input type="submit" value="Sign Up" class="float_right">
+							<input type="submit" value="Save Profile" class="float_right">
 						</div>
 					</div>           
 				</form>
 
 				<div id="editProfileResult"></div>
+
+				<script type="text/javascript">
+				var username = localStorage.getItem("username");
+				var password = localStorage.getItem("password");
+				var user;
+				var apiKey;
+
+				// obtain user token
+				if ( typeof(username) !== "undefined" ) {
+	    			var data = {'auth': {'username': username, 'password': password}},
+    					url = "/app_dev.php/api/v1/auth/";
+
+					// Send the data using post
+					var posting = $.post( url, data );  
+
+					// Put the user values in editable form
+					posting.done(function( data ) {
+						var content = $( data ); 
+						apiKey = content["0"]["token"]["api_key"];
+						user = content["0"]["user"];
+						document.getElementById("_usernameP").setAttribute("value", user["username"]);
+						document.getElementById("_emailP").setAttribute("value", user["email"]);
+						if(user["firstName"]){
+							document.getElementById("_fnameP").setAttribute("value", user["firstName"]);
+						};
+						if(user["lastName"]){
+							document.getElementById("_lnameP").setAttribute("value", user["lastName"]);
+						};
+						if(user["about"]){
+							document.getElementById("_aboutP").setAttribute("value", user["about"]);
+						};
+					});
+
+					// If posting is unsuccessful, then:
+					posting.fail(function(xhr) {
+						var content = $.parseJSON( xhr.responseText );    
+						console.log( content );
+					});
+
+					$('#editProfile').submit(function(event) {
+						// Stop form from submitting normally
+						event.preventDefault();
+
+						// Get updated values from the form:
+						var $form = $( this ),
+						username = $form.find( "input[name='_username']" ).val(),
+						email = $form.find( "input[name='_email']" ).val(),
+						firstName = $form.find( "input[name='_fname']" ).val(),
+						lastName = $form.find( "input[name='_lname']" ).val(),
+						about = $form.find( "input[name='_about']" ).val(),
+						password = $form.find( "input[name='_password']" ).val(),
+						password2 = $form.find( "input[name='_password2']" ).val();
+							
+						$.ajax({
+            				headers : {
+                				'Accept' : 'application/json',
+                				'Content-Type' : 'application/json',
+                				'Authorization' : apiKey
+            				},
+            				url : "/app_dev.php/api/v1/users/profile/" + user["id"],
+            				type : 'PATCH',
+            				dataType : 'json',
+            				data : JSON.stringify({'user_profile': { 'email': email, 'username' : username, 'firstName' : firstName, 'lastName' : lastName, 'about' : about,  'plainPassword' : { 'first' : password, 'second' : password2 }}}),
+            				success : function(response, textStatus, jqXhr) {
+                				console.log("Profile Successfully Patched!");
+            				},
+            				error : function(jqXHR, textStatus, errorThrown) {
+                				console.log("The following error occured: " + textStatus, errorThrown);
+            				}
+        				});
+					}); 
+				}
+				</script>
 
 			</div>
 		</div>

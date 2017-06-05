@@ -21,6 +21,7 @@
 				</ul>
 
 				<form name="login" action="{{ path('security_login_check') }}" method="POST" id="loginform">
+				{#<form name="login" action="/app_dev.php/api/v1/auth/" id="loginform">#}
 					<div class="field_row row">
 						<label for="l_field_login" class="span2">{{ 'user.popup.username'|trans|desc('User name') }}</label>
 						<div class="span3">
@@ -44,19 +45,26 @@
 					</div>
 				</form>
 
+				<div id="userAuth"></div>
+
 				<script type="text/javascript">
 
 				$('#loginform').submit(function(event) {
-    				var userPref = {};
+					// Stop form from submitting normally
+					event.preventDefault();
+					
+					var $inputs = $('#loginform :input');
+					var values = {};
+					var userName = "",
+						passWord = "";
     				$inputs.each(function() {
         				values[this.name] = $(this).val();
-        				console.log("values[" + this.name + "] = " + $(this).val());
-    				});
-    				// Store
-					localStorage.CurrUser = userPref;
-					// Retrieve
-					event.preventDefault();
-				});
+        			});
+
+    				// Save data to the current local store
+					localStorage.setItem("username", values["_username"]);
+					localStorage.setItem("password", values["_password"]);
+    			});
 
 				</script>
 
@@ -130,7 +138,7 @@
 					parentDiv.removeChild( formRegister );
 					Array.prototype.slice.call(document.getElementsByTagName('h4')).forEach(function(item) {
 					item.remove();
-				});       
+				    });       
 				$( "#registrationResult" ).empty().append( content );
 				}); 
 
