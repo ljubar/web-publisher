@@ -43,7 +43,7 @@
 					<div class="field_row row">
 						<label for="l_field_login" class="span2">{{ 'user.popup.about'|trans|desc('About') }}</label>
 						<div class="span3">
-							<textarea id="_aboutP" name="_about" value=""></textarea>
+							<textarea id="_aboutP" name="_about" placeholder=""></textarea>
 						</div>
 					</div>					           
 
@@ -98,7 +98,7 @@
 							document.getElementById("_lnameP").setAttribute("value", user["lastName"]);
 						};
 						if(user["about"]){
-							document.getElementById("_aboutP").setAttribute("value", user["about"]);
+							document.getElementById("_aboutP").setAttribute("placeholder", user["about"]);
 						};
 					});
 
@@ -118,7 +118,7 @@
 						email = $form.find( "input[name='_email']" ).val(),
 						firstName = $form.find( "input[name='_fname']" ).val(),
 						lastName = $form.find( "input[name='_lname']" ).val(),
-						about = $form.find( "input[name='_about']" ).val(),
+						about = $form.find( "textarea[name='_about']" ).val(),
 						password = $form.find( "input[name='_password']" ).val(),
 						password2 = $form.find( "input[name='_password2']" ).val();
 							
@@ -133,10 +133,22 @@
             				dataType : 'json',
             				data : JSON.stringify({'user_profile': { 'email': email, 'username' : username, 'firstName' : firstName, 'lastName' : lastName, 'about' : about,  'plainPassword' : { 'first' : password, 'second' : password2 }}}),
             				success : function(response, textStatus, jqXhr) {
-                				console.log("Profile Successfully Patched!");
+            					var head = document.createElement("h5");
+            					var nodeH5 = document.createTextNode( "Your user profile was successfuly saved." );
+            					head.appendChild(nodeH5);
+            					var element = document.getElementById("editProfileResult");
+								element.appendChild(head);
             				},
             				error : function(jqXHR, textStatus, errorThrown) {
-                				console.log("The following error occured: " + textStatus, errorThrown);
+								var para = document.createElement("p");
+								var head = document.createElement("h5");
+								var nodeH5 = document.createTextNode( "Error occured:" );
+								var nodeP = document.createTextNode( textStatus +  errorThrown ); 
+								para.appendChild(nodeP);
+								head.appendChild(nodeH5);
+								var element = document.getElementById("editProfileResult");
+								element.appendChild(head);
+								element.appendChild(para);		
             				}
         				});
 					}); 
